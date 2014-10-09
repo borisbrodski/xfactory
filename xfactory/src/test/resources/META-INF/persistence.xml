@@ -6,6 +6,9 @@
 	    <provider>org.hibernate.ejb.HibernatePersistence</provider>
 
 		<class>org.github.xfactory.testset1.Book</class>
+		<class>org.github.xfactory.testset1.Customer</class>
+		<class>org.github.xfactory.testset1.Receipt</class>
+
 		<properties>
 
 			<property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver" />

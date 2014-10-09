@@ -2,6 +2,8 @@ package org.github.xfactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 
@@ -10,6 +12,7 @@ import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 public abstract class AbstractXFactory<T> {
 	private T entity;
 	private boolean isPersisted;
+    private List< AbstractXFactory< ? > > persistBeforeList = new ArrayList< AbstractXFactory< ? > >();
 
 	public AbstractXFactory() {
 		createXObject();
@@ -29,6 +32,16 @@ public abstract class AbstractXFactory<T> {
 		return entity;
 	}
 
+    public < T1, F extends AbstractXFactory< T1 >> T1 xpersistBefore(F fa) {
+        return xpersistBefore(fa, null);
+    }
+
+    public < T1, F extends AbstractXFactory< T1 >> T1 xpersistBefore(F fa, Procedure1< F > conf) {
+        persistBeforeList.add(fa);
+        return XFactory.xbuild(fa, conf);
+    }
+
+	
 	@SuppressWarnings("unchecked")
 	<F extends AbstractXFactory<T>> T applyInitBlock(Procedure1<F> initBlock) {
 		if (initBlock != null) {
@@ -59,6 +72,10 @@ public abstract class AbstractXFactory<T> {
 	}
 
 	private void persistBefore() {
+        for (AbstractXFactory< ? > abstractFactory : persistBeforeList) {
+            abstractFactory.persist();
+        }
+
 		// TODO
 		// for (AbstractXFactory< ? > abstractFactory : persistBeforeList) {
 		// abstractFactory.persist();

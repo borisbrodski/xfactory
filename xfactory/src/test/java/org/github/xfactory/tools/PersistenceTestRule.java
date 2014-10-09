@@ -34,4 +34,11 @@ public class PersistenceTestRule extends XBuildExtension implements TestRule {
 	public EntityManager getEntityManager() {
 		return statement.getEntityManager();
 	}
+	
+	public void flush() {
+		getEntityManager().flush();
+	}
+	public void clear() {
+		getEntityManager().clear();
+	}
 }
