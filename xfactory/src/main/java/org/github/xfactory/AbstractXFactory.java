@@ -13,23 +13,32 @@ public abstract class AbstractXFactory<T> {
 	private T entity;
 	private boolean isPersisted;
     private List< AbstractXFactory< ? > > persistBeforeList = new ArrayList< AbstractXFactory< ? > >();
+    private List< AbstractXFactory< ? > > childFactories = new ArrayList< AbstractXFactory< ? > >();
+    private Class<T> xobjectClass;
 
 	public AbstractXFactory() {
+		initXobjectClass();
 		createXObject();
 	}
 
 	public abstract void minimal();
 
-	public T getEntity() {
-		return entity;
-	}
-
 	public void set(Procedure1<T> setter) {
 		setter.apply(entity);
 	}
 
-	public T getXObject() {
+	public T xobject() {
 		return entity;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <E> E xobject(Class<E> clazz) {
+		for (AbstractXFactory<?> childFactory : childFactories) {
+			if (childFactory.getXobjectClass() == clazz) {
+				return (E) childFactory.xobject();
+			}
+		}
+		return null;
 	}
 
     public < T1, F extends AbstractXFactory< T1 >> T1 xpersistBefore(F fa) {
@@ -38,10 +47,11 @@ public abstract class AbstractXFactory<T> {
 
     public < T1, F extends AbstractXFactory< T1 >> T1 xpersistBefore(F fa, Procedure1< F > conf) {
         persistBeforeList.add(fa);
+        childFactories.add(fa);
         return XFactory.xbuild(fa, conf);
     }
 
-	
+
 	@SuppressWarnings("unchecked")
 	<F extends AbstractXFactory<T>> T applyInitBlock(Procedure1<F> initBlock) {
 		if (initBlock != null) {
@@ -102,14 +112,18 @@ public abstract class AbstractXFactory<T> {
 		}
 	}
 
-	private Class<T> getXobjectClass() {
+	public Class<T> getXobjectClass() {
+		return xobjectClass;
+	}
+
+	@SuppressWarnings("unchecked")
+	private void initXobjectClass() {
 		Class<?> directChild = this.getClass();
 
 		ParameterizedType type = (ParameterizedType) directChild
 				.getGenericSuperclass();
-		@SuppressWarnings("unchecked")
-		Class<T> clazz = (Class<T>) type.getActualTypeArguments()[0];
-		return clazz;
+
+		xobjectClass = (Class<T>) type.getActualTypeArguments()[0];
 	}
 
 	@Override
