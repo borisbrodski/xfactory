@@ -9,26 +9,50 @@ import org.junit.Rule
  * entities (or other POJO-like objects, like DTOs).
  */
 describe "Writing XFactories" {
-	@Rule
-	public extension PersistenceTestRule = new PersistenceTestRule(TestSet.TEST_SET1)
+    @Rule
+    public extension PersistenceTestRule = new PersistenceTestRule(TestSet.TEST_SET1)
 
-	/*
-	 * sdfsdf
-	 *
-	 * <pre class="prettyprint lang-spec">describe "A Stack"{
-	 * int i
-     * }</pre>
-	 * <pre class="lang-spec prettyprint">describe "A Stack"{
-     *   fact "initial size is 0"
-     *   fact "increases its size when pushing an element"
-     * }</pre>
+    /*
+     * Suppose we have a simple entity class `Customer`:
      *
-     * ss
-	 */
-	fact "Create a simple XFactory" {
-		val book = xbuild(new XFactoryBook)
+     * <pre class="lang-spec prettyprint">
+     * class Customer {
+     *     &#64;Id &#64;GeneratedValue
+     *     public Long id;
+     *
+     *     &#64;Column(nullable = false)
+     *     public String name;
+     *
+     *     public Boolean verified;
+     *
+     *     // Getters & setters
+     * }
+     * </pre>
+     *
+     * Then our XFactory may look like this:
+     *
+     * <pre class="lang-spec prettyprint">
+     * class XFactoryCustomer extends AbstractXFactory<Customer> {
+     *     override minimal() {
+     *         set [
+     *             name = "Coolest book ever"
+     *         ]
+     *     }
+     * }
+     * </pre>
+     *
+     * We extend `AbstractXFactory` class passing the entity class as a generic parameter.
+     * Then we have to implement `minimal` method setting all mandatory fields to some values.
+     * Now we can use this XFactory to create and persist simple instances:
+     */
+    fact "Simple XFactory" {
+        val createdInstance = xbuild(new XFactoryCustomer)
+        val persistedInstance = xpersist(new XFactoryCustomer)
 
-		book should not be null
-		book.title should not be null
-	}
+        createdInstance    should not be null
+        createdInstance.id should be null
+
+        persistedInstance    should not be null
+        persistedInstance.id should not be null
+    }
 }

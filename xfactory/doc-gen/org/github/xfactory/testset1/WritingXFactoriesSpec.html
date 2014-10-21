@@ -36,20 +36,39 @@
 						  <div class="tab-content">
 							  	<div class="tab-pane active" id="spec">
 <p>Here you will learn how to write XFactories for the entities (or other POJO-like objects, like DTOs).</p>
-<ul><li><p id="Create_a_simple_XFactory" class="example notrun"><strong>Create a simple XFactory</strong></p>
-<p>sdfsdf</p>
-<pre class="prettyprint lang-spec">describe "A Stack"{
-int i
-}</pre>
-<pre class="lang-spec prettyprint">describe "A Stack"{
-  fact "initial size is 0"
-  fact "increases its size when pushing an element"
-}</pre><p>ss</p>
-<pre class="prettyprint lang-spec linenums">
-val book = xbuild(new XFactoryBook)
+<ul><li><p id="Simple_XFactory" class="example notrun"><strong>Simple XFactory</strong></p>
+<p>Suppose we have a simple entity class <code>Customer</code>:</p>
+<pre class="lang-spec prettyprint">
+class Customer {
+    &#64;Id &#64;GeneratedValue
+    public Long id;
 
-book should not be null
-book.title should not be null</pre>
+    &#64;Column(nullable = false)
+    public String name;
+
+    public Boolean verified;
+
+    // Getters & setters
+}
+</pre><p>Then our XFactory may look like this:</p>
+<pre class="lang-spec prettyprint">
+class XFactoryCustomer extends AbstractXFactory<Customer> {
+    override minimal() {
+        set [
+            name = "Coolest book ever"
+        ]
+    }
+}
+</pre><p>We extend <code>AbstractXFactory</code> class passing the entity class as a generic parameter. Then we have to implement <code>minimal</code> method setting all mandatory fields to some values. Now we can use this XFactory to create and persist simple instances:</p>
+<pre class="prettyprint lang-spec linenums">
+val createdInstance = xbuild(new XFactoryCustomer)
+val persistedInstance = xpersist(new XFactoryCustomer)
+
+createdInstance    should not be null
+createdInstance.id should be null
+
+persistedInstance    should not be null
+persistedInstance.id should not be null</pre>
 </li></ul>
 							</div>
 						    <div class="tab-pane" id="source">
@@ -67,28 +86,52 @@ import org.junit.Rule
  * entities (or other POJO-like objects, like DTOs).
  */
 describe &quot;Writing XFactories&quot; {
-  @Rule
-  public extension PersistenceTestRule = new PersistenceTestRule(TestSet.TEST_SET1)
+    @Rule
+    public extension PersistenceTestRule = new PersistenceTestRule(TestSet.TEST_SET1)
 
-  /*
-   * sdfsdf
-   *
-   * &lt;pre class=&quot;prettyprint lang-spec&quot;&gt;describe &quot;A Stack&quot;{
-   * int i
-     * }&lt;/pre&gt;
-   * &lt;pre class=&quot;lang-spec prettyprint&quot;&gt;describe &quot;A Stack&quot;{
-     *   fact &quot;initial size is 0&quot;
-     *   fact &quot;increases its size when pushing an element&quot;
-     * }&lt;/pre&gt;
+    /*
+     * Suppose we have a simple entity class `Customer`:
      *
-     * ss
-   */
-  fact &quot;Create a simple XFactory&quot; {
-    val book = xbuild(new XFactoryBook)
+     * &lt;pre class=&quot;lang-spec prettyprint&quot;&gt;
+     * class Customer {
+     *     &amp;#64;Id &amp;#64;GeneratedValue
+     *     public Long id;
+     *
+     *     &amp;#64;Column(nullable = false)
+     *     public String name;
+     *
+     *     public Boolean verified;
+     *
+     *     // Getters &amp; setters
+     * }
+     * &lt;/pre&gt;
+     *
+     * Then our XFactory may look like this:
+     *
+     * &lt;pre class=&quot;lang-spec prettyprint&quot;&gt;
+     * class XFactoryCustomer extends AbstractXFactory&lt;Customer&gt; {
+     *     override minimal() {
+     *         set [
+     *             name = &quot;Coolest book ever&quot;
+     *         ]
+     *     }
+     * }
+     * &lt;/pre&gt;
+     *
+     * We extend `AbstractXFactory` class passing the entity class as a generic parameter.
+     * Then we have to implement `minimal` method setting all mandatory fields to some values.
+     * Now we can use this XFactory to create and persist simple instances:
+     */
+    fact &quot;Simple XFactory&quot; {
+        val createdInstance = xbuild(new XFactoryCustomer)
+        val persistedInstance = xpersist(new XFactoryCustomer)
 
-    book should not be null
-    book.title should not be null
-  }
+        createdInstance    should not be null
+        createdInstance.id should be null
+
+        persistedInstance    should not be null
+        persistedInstance.id should not be null
+    }
 }
 </pre>
 						    </p></div>
