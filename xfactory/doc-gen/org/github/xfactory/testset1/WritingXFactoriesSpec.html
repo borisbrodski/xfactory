@@ -46,7 +46,8 @@ class Customer {
     &#64;Column(nullable = false)
     public String name;
 
-    public Boolean verified;
+    public Date verified;
+    public String verifiedBy;
 
     // Getters & setters
 }
@@ -65,10 +66,32 @@ val createdInstance = xbuild(new XFactoryCustomer)
 val persistedInstance = xpersist(new XFactoryCustomer)
 
 createdInstance    should not be null
-createdInstance.id should be null
+createdInstance.id should be null       // not persisted
 
 persistedInstance    should not be null
-persistedInstance.id should not be null</pre>
+persistedInstance.id should not be null // persisted</pre>
+</li><li><p id="XFactory_with_domain_methods" class="example notrun"><strong>XFactory with domain methods</strong></p>
+<p>One of the key features of the XFactory is ability to wrap factory logic into domain methods. It improves readability and make a test more robust at the same time.<br> <br> Here is an example:</p>
+<pre class="lang-spec prettyprint">
+class XFactoryCustomer extends AbstractXFactory<Customer> {
+    override minimal() {
+        set [
+            name = "Coolest book ever"
+        ]
+    }
+    def makeVerified() {
+        set [
+            verified = 2.days.ago
+            verifiedBy = "Admin"
+        ]
+    }
+}
+</pre><p>Now let's look at the snippet below. It calls <code>minimal</code> and then <code>makeVerified</code> methods. We can read it like this:<br> <i><pre>  Build a valid and verified customer </pre></i> So we can specify our requirements on the object we build without explicitly writing the implementation details of this requirements. If in the future the logic of making a verified customers changes, we will have to just fix the method: <code>XFactoryCustomer.makeVerified()</code> and all the tests will be using the new logic automatically.</p>
+<pre class="prettyprint lang-spec linenums">
+xbuild(new XFactoryCustomer) [
+    minimal         // fill all mandatory field making object valid
+    makeVerified    // make it verified
+]</pre>
 </li></ul>
 							</div>
 						    <div class="tab-pane" id="source">
@@ -100,7 +123,8 @@ describe &quot;Writing XFactories&quot; {
      *     &amp;#64;Column(nullable = false)
      *     public String name;
      *
-     *     public Boolean verified;
+     *     public Date verified;
+     *     public String verifiedBy;
      *
      *     // Getters &amp; setters
      * }
@@ -127,10 +151,51 @@ describe &quot;Writing XFactories&quot; {
         val persistedInstance = xpersist(new XFactoryCustomer)
 
         createdInstance    should not be null
-        createdInstance.id should be null
+        createdInstance.id should be null       // not persisted
 
         persistedInstance    should not be null
-        persistedInstance.id should not be null
+        persistedInstance.id should not be null // persisted
+    }
+
+    /*
+     * One of the key features of the XFactory is ability to wrap
+     * factory logic into domain methods. It improves readability
+     * and make a test more robust at the same time.&lt;br&gt;
+     * &lt;br&gt;
+     * Here is an example:
+     *
+     * &lt;pre class=&quot;lang-spec prettyprint&quot;&gt;
+     * class XFactoryCustomer extends AbstractXFactory&lt;Customer&gt; {
+     *     override minimal() {
+     *         set [
+     *             name = &quot;Coolest book ever&quot;
+     *         ]
+     *     }
+     *     def makeVerified() {
+     *         set [
+     *             verified = 2.days.ago
+     *             verifiedBy = &quot;Admin&quot;
+     *         ]
+     *     }
+     * }
+     * &lt;/pre&gt;
+     *
+     * Now let's look at the snippet below. It calls `minimal` and then `makeVerified`
+     * methods. We can read it like this:&lt;br&gt;
+     * &lt;i&gt;&lt;pre&gt;
+     *   Build a valid and verified customer
+     * &lt;/pre&gt;&lt;/i&gt;
+     * So we can specify our requirements on the object we build without
+     * explicitly writing the implementation details of this requirements.
+     * If in the future the logic of making a verified customers changes, we will have
+     * to just fix the method: `XFactoryCustomer.makeVerified()` and all the tests
+     * will be using the new logic automatically.
+     */
+    fact &quot;XFactory with domain methods&quot; {
+        xbuild(new XFactoryCustomer) [
+            minimal         // fill all mandatory field making object valid
+            makeVerified    // make it verified
+        ]
     }
 }
 </pre>

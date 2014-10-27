@@ -1,5 +1,7 @@
 package org.github.xfactory.testset1;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,11 +12,12 @@ public class Customer {
 	@Id
 	@GeneratedValue
 	public Long id;
-	
+
 	@Column(nullable = false)
 	public String name;
-	
-	public Boolean verified;
+
+	public Date verified;
+	public String verifiedBy;
 
 	public Long getId() {
 		return id;
@@ -32,12 +35,21 @@ public class Customer {
 		this.name = name;
 	}
 
-	public Boolean getVerified() {
+	public Date getVerified() {
 		return verified;
 	}
 
-	public void setVerified(Boolean verified) {
+	public void setVerified(Date verified) {
 		this.verified = verified;
 	}
-	
+
+	public String getVerifiedBy() {
+		return verifiedBy;
+	}
+
+	public void setVerifiedBy(String verifiedBy) {
+		this.verifiedBy = verifiedBy;
+	}
+
+
 }

@@ -23,7 +23,8 @@ describe "Writing XFactories" {
      *     &#64;Column(nullable = false)
      *     public String name;
      *
-     *     public Boolean verified;
+     *     public Date verified;
+     *     public String verifiedBy;
      *
      *     // Getters & setters
      * }
@@ -50,9 +51,50 @@ describe "Writing XFactories" {
         val persistedInstance = xpersist(new XFactoryCustomer)
 
         createdInstance    should not be null
-        createdInstance.id should be null
+        createdInstance.id should be null       // not persisted
 
         persistedInstance    should not be null
-        persistedInstance.id should not be null
+        persistedInstance.id should not be null // persisted
+    }
+
+    /*
+     * One of the key features of the XFactory is ability to wrap
+     * factory logic into domain methods. It improves readability
+     * and make a test more robust at the same time.<br>
+     * <br>
+     * Here is an example:
+     *
+     * <pre class="lang-spec prettyprint">
+     * class XFactoryCustomer extends AbstractXFactory<Customer> {
+     *     override minimal() {
+     *         set [
+     *             name = "Coolest book ever"
+     *         ]
+     *     }
+     *     def makeVerified() {
+     *         set [
+     *             verified = 2.days.ago
+     *             verifiedBy = "Admin"
+     *         ]
+     *     }
+     * }
+     * </pre>
+     *
+     * Now let's look at the snippet below. It calls `minimal` and then `makeVerified`
+     * methods. We can read it like this:<br>
+     * <i><pre>
+     *   Build a valid and verified customer
+     * </pre></i>
+     * So we can specify our requirements on the object we build without
+     * explicitly writing the implementation details of this requirements.
+     * If in the future the logic of making a verified customers changes, we will have
+     * to just fix the method: `XFactoryCustomer.makeVerified()` and all the tests
+     * will be using the new logic automatically.
+     */
+    fact "XFactory with domain methods" {
+        xbuild(new XFactoryCustomer) [
+            minimal         // fill all mandatory field making object valid
+            makeVerified    // make it verified
+        ]
     }
 }

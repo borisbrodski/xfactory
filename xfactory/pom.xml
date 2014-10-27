@@ -186,6 +186,19 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-javadoc-plugin</artifactId>
+			    <version>2.9.1</version>
+			    <configuration>
+			        <aggregate>true</aggregate>
+			        <show>public</show>
+			        <nohelp>true</nohelp>
+			        <header>XFactory, ${project.version}</header>
+			        <footer>XFactory, ${project.version}</footer>
+			        <doctitle>XFactory, ${project.version}</doctitle>
+			    </configuration>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
