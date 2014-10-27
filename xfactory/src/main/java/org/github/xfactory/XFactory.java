@@ -4,32 +4,43 @@ import javax.persistence.EntityManager;
 
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 
+/**
+ * Main XFactory interface class.
+ * <ul>
+ * <li> <code>initTest()</code> prepare current thread for a new test to be run
+ * <li> <code>doneTest()</code> clean current thread after test run
+ * <li> <code>xbuild</code> Build an instance of a POJO or entity
+ * <li> <code>xpersist</code> Build and persist an instance of an entity
+ * </ul>
+ *
+ * @author Boris Brodski
+ */
 public class XFactory {
-	private static ThreadLocal<InfrastructureProvider> infrastructureProviderThreadLocal = new ThreadLocal<InfrastructureProvider>();
 
+	/**
+	 * Initialize XFactory for a test run.
+	 *
+	 * @param infrastructureProvider implementation of the infrastructure provide for the
+	 * upcoming test.
+	 */
 	public static void initTest(InfrastructureProvider infrastructureProvider) {
-		infrastructureProviderThreadLocal.set(infrastructureProvider);
+		InfrastructureManager.setInfrastructureProvider(infrastructureProvider);
 	}
 
 	public static void doneTest() {
-		infrastructureProviderThreadLocal.set(null);
+		InfrastructureManager.resetInfrastructureProvider();
 	}
-	
-	public static InfrastructureProvider getInfrastructureProvider() {
-		return infrastructureProviderThreadLocal.get();
-	}
-	
-	
+
 	public static < T, F extends AbstractXFactory< T >> T xpersist(F xfactory) {
 		return xpersist(xfactory, null);
 	}
-	
+
     public static < T, F extends AbstractXFactory< T >> T xpersist(F xfactory, Procedure1< F > initBlock) {
         T entity = xfactory.applyInitBlock(initBlock);
         xfactory.persist();
 
         // TODO Make flush optional
-        EntityManager entityManager = getInfrastructureProvider().getEntityManager();
+        EntityManager entityManager = InfrastructureManager.getEntityManager();
         entityManager.flush();
 
         return entity;

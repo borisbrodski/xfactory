@@ -9,6 +9,13 @@ import javax.persistence.EntityManager;
 
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 
+/**
+ * Abstract class for all factories.
+ *
+ * @author Boris Brodski
+ *
+ * @param <T> POJO or Entity class to build
+ */
 public abstract class AbstractXFactory<T> {
 	private T entity;
 	private boolean isPersisted;
@@ -21,16 +28,36 @@ public abstract class AbstractXFactory<T> {
 		createXObject();
 	}
 
+	/**
+	 * Initialize POJO or entity to satisfy elementary domain constraints.<br>
+	 * Create child objects as needed using
+	 * <ul>
+	 * <li> <code>{@link #xpersistBefore(AbstractXFactory)}</code>
+	 * <li> <code>{@link #xpersistAfter(AbstractXFactory)}</code>
+	 * </ul>
+	 * <i>For entities</i>: all database constraints should be fulfilled.
+	 */
 	public abstract void minimal();
 
 	public void set(Procedure1<T> setter) {
 		setter.apply(entity);
 	}
 
+	/**
+	 * Return a current instance of created object of type <code>T</code>.
+	 *
+	 * @return POJO or entity of type <code>T</code>
+	 */
 	public T xobject() {
 		return entity;
 	}
 
+	/**
+	 * Search this and all child XFactories for an object of type <code>clazz</code>.
+	 *
+	 * @param clazz the type of the xobject to search
+	 * @return found object or <code>null</code> if no such object was found
+	 */
 	@SuppressWarnings("unchecked")
 	public <E> E xobject(Class<E> clazz) {
 		for (AbstractXFactory<?> childFactory : childFactories) {
@@ -41,16 +68,41 @@ public abstract class AbstractXFactory<T> {
 		return null;
 	}
 
+	/**
+	 * Build or persist and object using XFactory <code>fa</code> before
+	 * this object get built or persisted.
+	 *
+	 * @param fa XFactory to build or persist a child object
+	 * @return child object
+	 */
     public < T1, F extends AbstractXFactory< T1 >> T1 xpersistBefore(F fa) {
         return xpersistBefore(fa, null);
     }
 
+	/**
+	 * Build or persist and object using XFactory <code>fa</code> before
+	 * this object get built or persisted.
+	 *
+	 * @param fa XFactory to build or persist a child object
+	 * @param conf XFactory configuration block for the child object
+	 * @return child object
+	 */
     public < T1, F extends AbstractXFactory< T1 >> T1 xpersistBefore(F fa, Procedure1< F > conf) {
         persistBeforeList.add(fa);
         childFactories.add(fa);
         return XFactory.xbuild(fa, conf);
     }
 
+	/**
+	 * Build or persist and object using XFactory <code>fa</code> after
+	 * this object get built or persisted.
+	 *
+	 * @param fa XFactory to build or persist a child object
+	 * @return child object
+	 */
+    public < T1, F extends AbstractXFactory< T1 >> T1 xpersistAfter(F fa) {
+    	throw new InternalError("Implement me");
+    }
 
 	@SuppressWarnings("unchecked")
 	<F extends AbstractXFactory<T>> T applyInitBlock(Procedure1<F> initBlock) {
@@ -72,9 +124,7 @@ public abstract class AbstractXFactory<T> {
 	}
 
 	private void save() {
-		InfrastructureProvider infrastructureProvider = XFactory
-				.getInfrastructureProvider();
-		EntityManager entityManager = infrastructureProvider.getEntityManager();
+		EntityManager entityManager = InfrastructureManager.getEntityManager();
 		if (!entityManager.contains(entity)) {
 			// TODO Call infrastructureProvider.prePersist(entity);
 			entityManager.persist(entity);
@@ -112,6 +162,11 @@ public abstract class AbstractXFactory<T> {
 		}
 	}
 
+	/**
+	 * Return class of the object to build.
+	 *
+	 * return Class object of the type <code>T</code>
+	 */
 	public Class<T> getXobjectClass() {
 		return xobjectClass;
 	}
