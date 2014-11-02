@@ -30,6 +30,15 @@
 		</developer>
 	</developers>
 	<inceptionYear>2014</inceptionYear>
+	<issueManagement>
+		<url>https://github.com/borisbrodski/xfactory/issues</url>
+	</issueManagement>
+
+	<scm>
+		<connection>scm:git:git@github.com:borisbrodski/xfactory.git</connection>
+		<url>scm:git:git@github.com:borisbrodski/xfactory.git</url>
+		<developerConnection>scm:git:git@github.com:borisbrodski/xfactory.git</developerConnection>
+	</scm>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -138,6 +147,19 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.12.4</version>
+				<configuration>
+					<includes>
+						<include>**/*Spec*.java</include>
+						<include>**/*Feature.java</include>
+						<include>**/*Test.java</include>
+						<include>**/*TestCase.java</include>
+					</includes>
+				</configuration>
+			</plugin>
 			<!--
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -159,6 +181,18 @@
 				</executions>
 			</plugin>
 			 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>  
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
@@ -224,6 +258,7 @@
 											<goal>
 												xtend-test-install-debug-info
 											</goal>
+											<goal>testCompile</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>
@@ -256,4 +291,17 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+    <distributionManagement>
+        <!-- Repository for snapshots -->
+        <snapshotRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <!-- Repository for releases -->
+        <repository>
+            <id>nexus-releases</id>
+            <name>Nexus Release Repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+    </distributionManagement>
 </project>
