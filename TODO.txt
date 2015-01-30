@@ -1,1 +1,1 @@
-- Make Maven run tests
+- [x] Make Maven run tests
