@@ -1,10 +1,10 @@
 //outlet.ASSET_OUTPUT.sourceFolder.src/main/java.ignore=true
-//outlet.ASSET_OUTPUT.sourceFolder.src/test/java.directory=doc-gen
+//outlet.ASSET_OUTPUT.sourceFolder.src/test/java.directory=doc-current
 //outlet.ASSET_OUTPUT.sourceFolder.src/test/jnario-gen.ignore=true
 //outlet.ASSET_OUTPUT.sourceFolder.src/test/resources.ignore=true
 //outlet.ASSET_OUTPUT.sourceFolder.src/test/xtend-gen.ignore=true
 //outlet.DOC_OUTPUT.sourceFolder.src/main/java.ignore=true
-//outlet.DOC_OUTPUT.sourceFolder.src/test/java.directory=doc-gen
+//outlet.DOC_OUTPUT.sourceFolder.src/test/java.directory=doc-current
 //outlet.DOC_OUTPUT.sourceFolder.src/test/jnario-gen.ignore=true
 //outlet.DOC_OUTPUT.sourceFolder.src/test/resources.ignore=true
 //outlet.DOC_OUTPUT.sourceFolder.src/test/xtend-gen.ignore=true

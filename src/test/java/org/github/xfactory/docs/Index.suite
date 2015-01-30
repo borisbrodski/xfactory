@@ -1,0 +1,15 @@
+package org.github.xfactory.docs
+
+# XFactory Documentation (v0.0.1)
+
+XFactory is an embedded DSL (into Xtend/Jnario) to instantiate and persist Entities and POJOs.
+
+* [Homepage at GitHub](https://github.com/borisbrodski/xfactory)
+* [Talk at EclipseCon](http://youtu.be/jCgPfxaY8XQ)
+
+## Getting started
+
+Learn how to add XFactory to your project.
+
+- "Using XFactory to create and persist entities": How to use XFactory classes in your tests
+- "Writing XFactories": How to implement XFactory classes for your POJOs and entities

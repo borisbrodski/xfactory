@@ -1,5 +1,8 @@
-package org.github.xfactory.testset1
+package org.github.xfactory.docs
 
+import org.github.xfactory.testset1.Book
+import org.github.xfactory.testset1.XFactoryBook
+import org.github.xfactory.testset1.XFactoryReceipt
 import org.github.xfactory.tools.PersistenceTestRule
 import org.github.xfactory.tools.TestSet
 import org.junit.Rule

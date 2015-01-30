@@ -3,11 +3,12 @@
 
 An Embedded DSL (EDSL) into Xtend to build POJOs and persist entities.
 
+* [Talk at EclipseCon](http://youtu.be/jCgPfxaY8XQ)
+
 ## Documentation
 
-* [Using XFactories](http://borisbrodski.github.io/xfactory/xfactory/doc-gen/org/github/xfactory/testset1/UsingXFactoryToCreateAndPersistEntitiesSpec.html)
-* [Writing XFactories](http://borisbrodski.github.io/xfactory/xfactory/doc-gen/org/github/xfactory/testset1/WritingXFactoriesSpec.html)
-
+* Version 0.0.1
+  * [XFactory Documentation](http://borisbrodski.github.io/xfactory/xfactory/doc-0.0.1/org/github/xfactory/docs/XFactoryDocumentationV001Suite.html)
 
 ## Download
 

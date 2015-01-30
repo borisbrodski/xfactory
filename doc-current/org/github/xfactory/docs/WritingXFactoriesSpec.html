@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Writing XFactories</title>
+<meta name="description" content="">
+<meta name="author" content="Jnario">
+
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+<link rel="stylesheet" href="../../../../css/bootstrap.min.css">
+<link rel="stylesheet" href="../../../../css/bootstrap-responsive.min.css">
+<link rel="stylesheet" href="../../../../css/custom.css">
+<link rel="stylesheet" href="../../../../css/prettify.css">
+<script type="text/javascript" src="../../../../js/prettify.js"></script>
+<script type="text/javascript" src="../../../../js/lang-jnario.js"></script>
+<script type="text/javascript" src="../../../../js/jquery.js"></script>
+<script type="text/javascript" src="../../../../js/bootstrap-tab.js"></script>
+</head>
+
+<body onload="prettyPrint()">
+	<div class="container">
+		<div class="tabbable">
+			<div class="content">
+				<div class="page-header notrun">
+					<h1>Writing XFactories</h1>
+					  <ul class="nav nav-tabs pull-right">
+					    <li class="active"><a href="#spec" data-toggle="tab">Spec</a></li>
+						<li><a href="#source" data-toggle="tab">Source</a></li>
+					  </ul>
+				</div>
+				<div class="row">
+					<div class="span12">
+						  <div class="tab-content">
+							  	<div class="tab-pane active" id="spec">
+<p>Here you will learn how to write XFactories for the entities (or other POJO-like objects, like DTOs).</p>
+<ul><li><p id="Simple_XFactory" class="example notrun"><strong>Simple XFactory</strong></p>
+<p>Suppose we have a simple entity class <code>Customer</code>:</p>
+<pre class="lang-spec prettyprint">
+class Customer {
+    &#64;Id &#64;GeneratedValue
+    public Long id;
+
+    &#64;Column(nullable = false)
+    public String name;
+
+    public Date verified;
+    public String verifiedBy;
+
+    // Getters & setters
+}
+</pre><p>Then our XFactory may look like this:</p>
+<pre class="lang-spec prettyprint">
+class XFactoryCustomer extends AbstractXFactory<Customer> {
+    override minimal() {
+        set [
+            name = "Coolest book ever"
+        ]
+    }
+}
+</pre><p>We extend <code>AbstractXFactory</code> class passing the entity class as a generic parameter. Then we have to implement <code>minimal</code> method setting all mandatory fields to some values. Now we can use this XFactory to create and persist simple instances:</p>
+<pre class="prettyprint lang-spec linenums">
+val createdInstance = xbuild(new XFactoryCustomer)
+val persistedInstance = xpersist(new XFactoryCustomer)
+
+createdInstance    should not be null
+createdInstance.id should be null       // not persisted
+
+persistedInstance    should not be null
+persistedInstance.id should not be null // persisted</pre>
+</li><li><p id="XFactory_with_domain_methods" class="example notrun"><strong>XFactory with domain methods</strong></p>
+<p>One of the key features of the XFactory is ability to wrap factory logic into domain methods. It improves readability and make a test more robust at the same time.<br> <br> Here is an example:</p>
+<pre class="lang-spec prettyprint">
+class XFactoryCustomer extends AbstractXFactory<Customer> {
+    override minimal() {
+        set [
+            name = "Coolest book ever"
+        ]
+    }
+    def makeVerified() {
+        set [
+            verified = 2.days.ago
+            verifiedBy = "Admin"
+        ]
+    }
+}
+</pre><p>Now let's look at the snippet below. It calls <code>minimal</code> and then <code>makeVerified</code> methods. We can read it like this:<br> <i><pre>  Build a valid and verified customer </pre></i> So we can specify our requirements on the object we build without explicitly writing the implementation details of this requirements. If in the future the logic of making a verified customers changes, we will have to just fix the method: <code>XFactoryCustomer.makeVerified()</code> and all the tests will be using the new logic automatically.</p>
+<pre class="prettyprint lang-spec linenums">
+xbuild(new XFactoryCustomer) [
+    minimal         // fill all mandatory field making object valid
+    makeVerified    // make it verified
+]</pre>
+</li></ul>
+							</div>
+						    <div class="tab-pane" id="source">
+						    	<h3>DocWriteXFactorySpec.spec</h3>
+						    	<p>
+<pre class="prettyprint lang-spec linenums">
+package org.github.xfactory.docs
+
+import org.github.xfactory.testset1.XFactoryCustomer
+import org.github.xfactory.tools.PersistenceTestRule
+import org.github.xfactory.tools.TestSet
+import org.junit.Rule
+
+/**
+ * Here you will learn how to write XFactories for the
+ * entities (or other POJO-like objects, like DTOs).
+ */
+describe &quot;Writing XFactories&quot; {
+    @Rule
+    public extension PersistenceTestRule = new PersistenceTestRule(TestSet.TEST_SET1)
+
+    /*
+     * Suppose we have a simple entity class `Customer`:
+     *
+     * &lt;pre class=&quot;lang-spec prettyprint&quot;&gt;
+     * class Customer {
+     *     &amp;#64;Id &amp;#64;GeneratedValue
+     *     public Long id;
+     *
+     *     &amp;#64;Column(nullable = false)
+     *     public String name;
+     *
+     *     public Date verified;
+     *     public String verifiedBy;
+     *
+     *     // Getters &amp; setters
+     * }
+     * &lt;/pre&gt;
+     *
+     * Then our XFactory may look like this:
+     *
+     * &lt;pre class=&quot;lang-spec prettyprint&quot;&gt;
+     * class XFactoryCustomer extends AbstractXFactory&lt;Customer&gt; {
+     *     override minimal() {
+     *         set [
+     *             name = &quot;Coolest book ever&quot;
+     *         ]
+     *     }
+     * }
+     * &lt;/pre&gt;
+     *
+     * We extend `AbstractXFactory` class passing the entity class as a generic parameter.
+     * Then we have to implement `minimal` method setting all mandatory fields to some values.
+     * Now we can use this XFactory to create and persist simple instances:
+     */
+    fact &quot;Simple XFactory&quot; {
+        val createdInstance = xbuild(new XFactoryCustomer)
+        val persistedInstance = xpersist(new XFactoryCustomer)
+
+        createdInstance    should not be null
+        createdInstance.id should be null       // not persisted
+
+        persistedInstance    should not be null
+        persistedInstance.id should not be null // persisted
+    }
+
+    /*
+     * One of the key features of the XFactory is ability to wrap
+     * factory logic into domain methods. It improves readability
+     * and make a test more robust at the same time.&lt;br&gt;
+     * &lt;br&gt;
+     * Here is an example:
+     *
+     * &lt;pre class=&quot;lang-spec prettyprint&quot;&gt;
+     * class XFactoryCustomer extends AbstractXFactory&lt;Customer&gt; {
+     *     override minimal() {
+     *         set [
+     *             name = &quot;Coolest book ever&quot;
+     *         ]
+     *     }
+     *     def makeVerified() {
+     *         set [
+     *             verified = 2.days.ago
+     *             verifiedBy = &quot;Admin&quot;
+     *         ]
+     *     }
+     * }
+     * &lt;/pre&gt;
+     *
+     * Now let's look at the snippet below. It calls `minimal` and then `makeVerified`
+     * methods. We can read it like this:&lt;br&gt;
+     * &lt;i&gt;&lt;pre&gt;
+     *   Build a valid and verified customer
+     * &lt;/pre&gt;&lt;/i&gt;
+     * So we can specify our requirements on the object we build without
+     * explicitly writing the implementation details of this requirements.
+     * If in the future the logic of making a verified customers changes, we will have
+     * to just fix the method: `XFactoryCustomer.makeVerified()` and all the tests
+     * will be using the new logic automatically.
+     */
+    fact &quot;XFactory with domain methods&quot; {
+        xbuild(new XFactoryCustomer) [
+            minimal         // fill all mandatory field making object valid
+            makeVerified    // make it verified
+        ]
+    }
+}
+</pre>
+						    </p></div>
+						  </div>
+					</div> 
+				</div> <!-- /row -->
+			</div> <!-- /content -->
+		</div> <!-- /tabbable -->
+		<footer>
+			<p><small>Generated by <a href="http://www.jnario.org">Jnario</a>.</small></p>
+		</footer>
+	</div> <!-- /container -->
+
+</body>
+</html>
