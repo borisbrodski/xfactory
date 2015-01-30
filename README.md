@@ -8,12 +8,11 @@ An Embedded DSL (EDSL) into Xtend to build POJOs and persist entities.
 ## Documentation
 
 * Version 0.0.1
-  * [XFactory Documentation](http://borisbrodski.github.io/xfactory/xfactory/doc-0.0.1/org/github/xfactory/docs/XFactoryDocumentationV001Suite.html)
+  * [XFactory Documentation](http://borisbrodski.github.io/xfactory/doc-0.0.1/org/github/xfactory/docs/XFactoryDocumentationV001Suite.html)
 
 ## Download
 
-Using Maven
-
+* Using Maven
 ```
 <dependency>
 	<groupId>com.github.borisbrodski</groupId>
@@ -21,6 +20,11 @@ Using Maven
 	<version>0.0.1</version>
 </dependency>
 ```
+
+* Direct download
+  * [xfactory-0.0.1.jar](http://central.maven.org/maven2/com/github/borisbrodski/xfactory/0.0.1/xfactory-0.0.1.jar)
+  * [xfactory-0.0.1-javadoc.jar](http://central.maven.org/maven2/com/github/borisbrodski/xfactory/0.0.1/xfactory-0.0.1-javadoc.jar)
+  * [xfactory-0.0.1-sources.jar](http://central.maven.org/maven2/com/github/borisbrodski/xfactory/0.0.1/xfactory-0.0.1-sources.jar)
 
 ## Integration into your test environment
 
