@@ -5,28 +5,29 @@ import org.github.xfactory.tools.TestSet
 import org.junit.Rule
 
 /**
- * Here you will learn how to use XFactories to
- * create and persist entities (or other POJO-like objects, like DTOs).
- *
- * *Note:* Prior to use XFactories you will have to implement one XFactory class
- * per POJO containing mandatory `minimal` method and optional business initialization
- * methods, like `XFactoryBook.makeBestSeller()`.
+ * Here you will learn how to use XFactory to
+ * create POJOs and persist entities.<br/>
+ * <br/>
+ * *Note:* Prior to use XFactory you will have to implement one XFactory class
+ * per POJO containing mandatory `minimal` method. You are also advised to create
+ * some business initialization methods, like `XFactoryBook.makeBestSeller()`.
  */
-describe "Using XFactories to create and persist entities" {
+describe "Using XFactory to create and persist entities" {
 	@Rule
 	public extension PersistenceTestRule = new PersistenceTestRule(TestSet.TEST_SET1)
 
 	context "Create and persist instances of an entity" {
 		/**
 		 * To get a brand new instance of an entity you have
-		 * simply to pass an instance of the corresponding factory
-		 * to the `xbuild(...)` method.
+		 * to pass an instance of the corresponding XFactory
+		 * to the `xbuild(...)` method. The `minimal` method of the
+		 * XFactory will be called.
 		 */
 		fact "Create a new instance of an entity" {
 			val book = xbuild(new XFactoryBook)
 
 			book should not be null
-			book.title should not be null
+			book.title should not be null // Initialized by XFactoryBook.minimal()
 		}
 
 		/**

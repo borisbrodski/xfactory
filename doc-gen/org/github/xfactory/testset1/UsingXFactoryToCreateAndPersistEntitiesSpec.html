@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Using XFactories to create and persist entities</title>
+<title>Using XFactory to create and persist entities</title>
 <meta name="description" content="">
 <meta name="author" content="Jnario">
 
@@ -25,7 +25,7 @@
 		<div class="tabbable">
 			<div class="content">
 				<div class="page-header notrun">
-					<h1>Using XFactories to create and persist entities</h1>
+					<h1>Using XFactory to create and persist entities</h1>
 					  <ul class="nav nav-tabs pull-right">
 					    <li class="active"><a href="#spec" data-toggle="tab">Spec</a></li>
 						<li><a href="#source" data-toggle="tab">Source</a></li>
@@ -35,15 +35,15 @@
 					<div class="span12">
 						  <div class="tab-content">
 							  	<div class="tab-pane active" id="spec">
-<p>Here you will learn how to use XFactories to create and persist entities (or other POJO-like objects, like DTOs).</p><p><em>Note:</em> Prior to use XFactories you will have to implement one XFactory class per POJO containing mandatory <code>minimal</code> method and optional business initialization methods, like <code>XFactoryBook.makeBestSeller()</code>.</p>
+<p>Here you will learn how to use XFactory to create POJOs and persist entities.<br/> <br/> <em>Note:</em> Prior to use XFactory you will have to implement one XFactory class per POJO containing mandatory <code>minimal</code> method. You are also advised to create some business initialization methods, like <code>XFactoryBook.makeBestSeller()</code>.</p>
 <h3 class="exampleGroup notrun"  id="Create_and_persist_instances_of_an_entity">Create and persist instances of an entity</h3>
 <ul><li><p id="Create_a_new_instance_of_an_entity" class="example notrun"><strong>Create a new instance of an entity</strong></p>
-<p>To get a brand new instance of an entity you have simply to pass an instance of the corresponding factory to the <code>xbuild(...)</code> method.</p>
+<p>To get a brand new instance of an entity you have to pass an instance of the corresponding XFactory to the <code>xbuild(...)</code> method. The <code>minimal</code> method of the XFactory will be called.</p>
 <pre class="prettyprint lang-spec linenums">
 val book = xbuild(new XFactoryBook)
 
 book should not be null
-book.title should not be null</pre>
+book.title should not be null // Initialized by XFactoryBook.minimal()</pre>
 </li><li><p id="Persist_a_new_instance_of_an_entity" class="example notrun"><strong>Persist a new instance of an entity</strong></p>
 <p>Persisting a new entity in the database is as simple as calling <code>xpersist(...)</code> extension method instead of the <code>xbuild(...)</code> method. The XFactory implementation should be done is such a way, that the created entities satisfy all the database constraints.</p>
 <pre class="prettyprint lang-spec linenums">
@@ -117,28 +117,29 @@ import org.github.xfactory.tools.TestSet
 import org.junit.Rule
 
 /**
- * Here you will learn how to use XFactories to
- * create and persist entities (or other POJO-like objects, like DTOs).
- *
- * *Note:* Prior to use XFactories you will have to implement one XFactory class
- * per POJO containing mandatory `minimal` method and optional business initialization
- * methods, like `XFactoryBook.makeBestSeller()`.
+ * Here you will learn how to use XFactory to
+ * create POJOs and persist entities.&lt;br/&gt;
+ * &lt;br/&gt;
+ * *Note:* Prior to use XFactory you will have to implement one XFactory class
+ * per POJO containing mandatory `minimal` method. You are also advised to create
+ * some business initialization methods, like `XFactoryBook.makeBestSeller()`.
  */
-describe &quot;Using XFactories to create and persist entities&quot; {
+describe &quot;Using XFactory to create and persist entities&quot; {
   @Rule
   public extension PersistenceTestRule = new PersistenceTestRule(TestSet.TEST_SET1)
 
   context &quot;Create and persist instances of an entity&quot; {
     /**
      * To get a brand new instance of an entity you have
-     * simply to pass an instance of the corresponding factory
-     * to the `xbuild(...)` method.
+     * to pass an instance of the corresponding XFactory
+     * to the `xbuild(...)` method. The `minimal` method of the
+     * XFactory will be called.
      */
     fact &quot;Create a new instance of an entity&quot; {
       val book = xbuild(new XFactoryBook)
 
       book should not be null
-      book.title should not be null
+      book.title should not be null // Initialized by XFactoryBook.minimal()
     }
 
     /**
