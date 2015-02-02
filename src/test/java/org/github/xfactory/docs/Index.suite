@@ -1,6 +1,6 @@
 package org.github.xfactory.docs
 
-# XFactory Documentation (v0.0.1)
+# XFactory Documentation \- v0.0.1
 
 XFactory is an embedded DSL (into Xtend/Jnario) to instantiate and persist Entities and POJOs.
 
