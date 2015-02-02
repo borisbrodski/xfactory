@@ -1,6 +1,5 @@
 package org.github.xfactory;
 
-import javax.persistence.EntityManager;
 
 class InfrastructureManager {
 	private static ThreadLocal<InfrastructureProvider> infrastructureProviderThreadLocal = new ThreadLocal<InfrastructureProvider>();
@@ -13,11 +12,11 @@ class InfrastructureManager {
 		infrastructureProviderThreadLocal.set(null);
 	}
 
-	public static EntityManager getEntityManager() {
-		EntityManager entityManager = infrastructureProviderThreadLocal.get().getEntityManager();
-		if (entityManager == null) {
-			throw new XFactoryException("No entity manager available. Check your current implementation of the InfrastructureProvider.");
+	public static InfrastructureProvider getInfrastructureProvider() {
+		InfrastructureProvider infrastructureProvider = infrastructureProviderThreadLocal.get();
+		if (infrastructureProvider == null) {
+			throw new XFactoryException("InfrastructureProvider not set. Use XFactory.initTest() method to provide your implementation of the InfrastructureProvider to the XFactory");
 		}
-		return entityManager;
+		return infrastructureProvider;
 	}
 }

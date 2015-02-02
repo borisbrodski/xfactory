@@ -51,6 +51,7 @@
 			<groupId>org.hibernate.javax.persistence</groupId>
 			<artifactId>hibernate-jpa-2.0-api</artifactId>
 			<version>1.0.1.Final</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hsqldb</groupId>
@@ -86,6 +87,7 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<version>${hibernate.version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.xtend</groupId>
@@ -96,6 +98,7 @@
 			<groupId>org.jnario</groupId>
 			<artifactId>org.jnario.lib</artifactId>
 			<version>${jnario.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -152,10 +155,8 @@
 				<version>2.12.4</version>
 				<configuration>
 					<includes>
-						<include>**/*Spec*.java</include>
-						<include>**/*Feature.java</include>
+						<include>**/XFactoryDocumentation*Suite.java</include>
 						<include>**/*Test.java</include>
-						<include>**/*TestCase.java</include>
 					</includes>
 				</configuration>
 			</plugin>

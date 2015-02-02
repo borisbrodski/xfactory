@@ -1,6 +1,8 @@
 package org.github.xfactory.testset1
 
 import java.util.List
+import org.github.xfactory.InfrastructureProvider
+import org.github.xfactory.XFactory
 import org.github.xfactory.tools.PersistenceTestRule
 import org.github.xfactory.tools.TestSet
 import org.junit.Rule
@@ -59,5 +61,32 @@ class SimplePersistenceTest {
 				assertEquals("Coolest book ever", title)
 			]
 		]
+	}
+
+	@Test
+	def void testInfrastructureProviderCallbacksForXpersist() {
+		val events = newArrayList
+		val eventXobjects = newArrayList
+		XFactory.initTest(new InfrastructureProvider(){
+			override persist(Object xobject) {
+				events += "persist"
+				eventXobjects += xobject
+			}
+
+			override postPersist(Object xobject) {
+				events += "postPersist"
+				eventXobjects += xobject
+			}
+
+			override prePersist(Object xobject) {
+				events += "prePersist"
+				eventXobjects += xobject
+			}
+		})
+
+		val receipt = xpersist(new XFactoryReceipt)
+
+		events        <=> #["prePersist", "persist",    "persist",        "persist", "postPersist"]
+		eventXobjects <=> #[ receipt,      receipt.book, receipt.customer, receipt,   receipt     ]
 	}
 }

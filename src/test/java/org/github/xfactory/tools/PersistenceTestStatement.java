@@ -91,4 +91,20 @@ public class PersistenceTestStatement extends Statement implements Infrastructur
     public EntityManager getEntityManager() {
         return entityManager;
     }
+
+	@Override
+	public void prePersist(Object rootXObject) {
+	}
+
+	@Override
+	public void postPersist(Object rootXobject) {
+		getEntityManager().flush();
+	}
+
+	@Override
+	public void persist(Object xobject) {
+		if (!getEntityManager().contains(xobject)) {
+			getEntityManager().persist(xobject);
+		}
+	}
 }

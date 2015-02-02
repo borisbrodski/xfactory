@@ -14,9 +14,9 @@ public class UnitTestStatement extends Statement {
 	@Override
 	public void evaluate() throws Throwable {
 		try {
-			XFactory.initTest(new UnitTestInfrastructureProvider());
+			XFactory.initTest(null);
 			base.evaluate();
-			
+
 		} finally {
 			XFactory.doneTest();
 		}

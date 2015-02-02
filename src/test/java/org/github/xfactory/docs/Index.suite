@@ -11,5 +11,6 @@ XFactory is an embedded DSL (into Xtend/Jnario) to instantiate and persist Entit
 
 Learn how to add XFactory to your project.
 
+- "Setup XFactory": How to add XFactory to your test project
 - "Using XFactory to create and persist entities": How to use XFactory classes in your tests
 - "Writing XFactories": How to implement XFactory classes for your POJOs and entities

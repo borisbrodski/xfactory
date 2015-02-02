@@ -5,8 +5,6 @@ import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 
 /**
@@ -17,7 +15,7 @@ import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
  * @param <T> POJO or Entity class to build
  */
 public abstract class AbstractXFactory<T> {
-	private T entity;
+	private T xobject;
 	private boolean isPersisted;
     private List< AbstractXFactory< ? > > persistBeforeList = new ArrayList< AbstractXFactory< ? > >();
     private List< AbstractXFactory< ? > > childFactories = new ArrayList< AbstractXFactory< ? > >();
@@ -40,7 +38,7 @@ public abstract class AbstractXFactory<T> {
 	public abstract void minimal();
 
 	public void set(Procedure1<T> setter) {
-		setter.apply(entity);
+		setter.apply(xobject);
 	}
 
 	/**
@@ -49,7 +47,7 @@ public abstract class AbstractXFactory<T> {
 	 * @return POJO or entity of type <code>T</code>
 	 */
 	public T xobject() {
-		return entity;
+		return xobject;
 	}
 
 	/**
@@ -111,7 +109,7 @@ public abstract class AbstractXFactory<T> {
 		} else {
 			minimal();
 		}
-		return entity;
+		return xobject;
 	}
 
 	void persist() {
@@ -124,11 +122,8 @@ public abstract class AbstractXFactory<T> {
 	}
 
 	private void save() {
-		EntityManager entityManager = InfrastructureManager.getEntityManager();
-		if (!entityManager.contains(entity)) {
-			// TODO Call infrastructureProvider.prePersist(entity);
-			entityManager.persist(entity);
-		}
+		InfrastructureProvider infrastructureProvider = InfrastructureManager.getInfrastructureProvider();
+		infrastructureProvider.persist(xobject);
 	}
 
 	private void persistBefore() {
@@ -154,7 +149,7 @@ public abstract class AbstractXFactory<T> {
 		try {
 			Constructor<T> constructor = xobjectClass.getDeclaredConstructor();
 			constructor.setAccessible(true);
-			entity = constructor.newInstance();
+			xobject = constructor.newInstance();
 		} catch (Exception e) {
 			throw new RuntimeException("Error creating a new instance of the "
 					+ xobjectClass.getCanonicalName()
@@ -183,7 +178,7 @@ public abstract class AbstractXFactory<T> {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + " [" + entity + "]";
+		return getClass().getSimpleName() + " [" + xobject + "]";
 	}
 
 }

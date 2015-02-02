@@ -1,17 +1,31 @@
 package org.github.xfactory;
 
-import javax.persistence.EntityManager;
 
 /**
- * Interface providing different aspects of the infrastructure to the Xfactory.
+ * Interface to the environment.
  *
  * @author Boris Brodski
  */
 public interface InfrastructureProvider {
+
 	/**
-	 * An instance of the entity manager (for tests with live DB-connection).
+	 * A POJO <code>rootPojo</code> with possible more dependent POJOs is about to be persistent.
 	 *
-	 * @return entity manager or <code>null</code>
+	 * @param xobject the POJO instance passed to {@link XFactory#xpersist(AbstractXFactory)} method
 	 */
-	public EntityManager getEntityManager();
+	public void prePersist(Object xobject);
+
+	/**
+	 * A POJO <code>rootPojo</code> with possible more dependent POJOs was successfully persisted.
+	 *
+	 * @param xobject the POJO instance passed to {@link XFactory#xpersist(AbstractXFactory)} method
+	 */
+	public void postPersist(Object xobject);
+
+	/**
+	 * Persist POJO in the database or other type of storage.
+	 *
+	 * @param xobject POJO to persist
+	 */
+	public void persist(Object xobject);
 }

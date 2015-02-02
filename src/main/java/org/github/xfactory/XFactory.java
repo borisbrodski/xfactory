@@ -1,7 +1,5 @@
 package org.github.xfactory;
 
-import javax.persistence.EntityManager;
-
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 
 /**
@@ -37,11 +35,12 @@ public class XFactory {
 
     public static < T, F extends AbstractXFactory< T >> T xpersist(F xfactory, Procedure1< F > initBlock) {
         T entity = xfactory.applyInitBlock(initBlock);
+
+        InfrastructureManager.getInfrastructureProvider().prePersist(xfactory.xobject());
+
         xfactory.persist();
 
-        // TODO Make flush optional
-        EntityManager entityManager = InfrastructureManager.getEntityManager();
-        entityManager.flush();
+        InfrastructureManager.getInfrastructureProvider().postPersist(xfactory.xobject());
 
         return entity;
     }
