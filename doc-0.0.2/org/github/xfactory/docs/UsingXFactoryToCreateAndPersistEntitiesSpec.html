@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Using XFactory to create and persist entities</title>
+<meta name="description" content="">
+<meta name="author" content="Jnario">
+
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+<link rel="stylesheet" href="../../../../css/bootstrap.min.css">
+<link rel="stylesheet" href="../../../../css/bootstrap-responsive.min.css">
+<link rel="stylesheet" href="../../../../css/custom.css">
+<link rel="stylesheet" href="../../../../css/prettify.css">
+<script type="text/javascript" src="../../../../js/prettify.js"></script>
+<script type="text/javascript" src="../../../../js/lang-jnario.js"></script>
+<script type="text/javascript" src="../../../../js/jquery.js"></script>
+<script type="text/javascript" src="../../../../js/bootstrap-tab.js"></script>
+</head>
+
+<body onload="prettyPrint()">
+	<div class="container">
+		<div class="tabbable">
+			<div class="content">
+				<div class="page-header notrun">
+					<h1>Using XFactory to create and persist entities</h1>
+					  <ul class="nav nav-tabs pull-right">
+					    <li class="active"><a href="#spec" data-toggle="tab">Spec</a></li>
+						<li><a href="#source" data-toggle="tab">Source</a></li>
+					  </ul>
+				</div>
+				<div class="row">
+					<div class="span12">
+						  <div class="tab-content">
+							  	<div class="tab-pane active" id="spec">
+<p>Here you will learn how to use XFactory to create POJOs and persist entities.<br/> <br/> <em>Note:</em> Prior to use XFactory you will have to implement one XFactory class per POJO containing mandatory <code>minimal</code> method. You are also advised to create some business initialization methods, like <code>XFactoryBook.makeBestSeller()</code>.</p>
+<h3 class="exampleGroup notrun"  id="Create_and_persist_instances_of_an_entity">Create and persist instances of an entity</h3>
+<ul><li><p id="Create_a_new_instance_of_an_entity" class="example notrun"><strong>Create a new instance of an entity</strong></p>
+<p>To get a brand new instance of an entity you have to pass an instance of the corresponding XFactory to the <code>xbuild(...)</code> method. The <code>minimal</code> method of the XFactory will be called.</p>
+<pre class="prettyprint lang-spec linenums">
+val book = xbuild(new XFactoryBook)
+
+book should not be null
+book.title should not be null // Initialized by XFactoryBook.minimal()</pre>
+</li><li><p id="Persist_a_new_instance_of_an_entity" class="example notrun"><strong>Persist a new instance of an entity</strong></p>
+<p>Persisting a new entity in the database is as simple as calling <code>xpersist(...)</code> extension method instead of the <code>xbuild(...)</code> method. The XFactory implementation should be done in such a way, that the created entities satisfy all database constraints.</p>
+<pre class="prettyprint lang-spec linenums">
+val book = xpersist(new XFactoryBook)
+
+book should not be null
+book.id should not be null</pre>
+</li><li><p id="Child_entities_get_created_automatically" class="example notrun"><strong>Child entities get created automatically</strong></p>
+<p>In order to satisfy database or some business constraints child entities can be created in the background.</p>
+<pre class="prettyprint lang-spec linenums">
+val receipt = xpersist(new XFactoryReceipt)
+
+receipt.book.id should not be null
+receipt.customer.id should not be null</pre>
+</li></ul>
+<h3 class="exampleGroup notrun"  id="Take_control_of_the_entity_instantiation">Take control of the entity instantiation</h3>
+<p>Passing a closure as a second argument to the <code>xbuild</code> or <code>xpersist</code> method allows you to modify entity instantiation in many ways.</p>
+<ul><li><p id="Missing_call_to_minimal_leaves_uninitialized_entity" class="example notrun"><strong>Missing call to minimal leaves uninitialized entity</strong></p>
+<p>Passing a closure as a second argument to the <code>xbuild</code> or <code>xpersist</code> method allows customization of the initialization procedure.</p>
+<pre class="prettyprint lang-spec linenums">
+val book = xbuild(new XFactoryBook) []
+
+book.title should be null</pre>
+</li><li><p id="Calling_minimal_method_manually_initialize_the_entity_in_the_standard_way" class="example notrun"><strong>Calling minimal method manually initialize the entity in the standard way</strong></p>
+<p>Passing a closure as a second argument to the <code>xbuild</code> or <code>xpersist</code> method allows customization of the initialization procedure.</p>
+<pre class="prettyprint lang-spec linenums">
+val book = xbuild(new XFactoryBook) [
+    minimal
+]
+
+// Same as &quot;val book = xbuild(new XFactoryBook)&quot;
+
+book.title should not be null</pre>
+</li><li><p id="Changing_entity_attribute" class="example notrun"><strong>Changing entity attribute</strong></p>
+<p>The <code>set [...]</code> provides direct access to the attribute of the entity. The call to the <code>minimal</code> method ensures, that all other initialization are done.</p>
+<pre class="prettyprint lang-spec linenums">
+val book = xbuild(new XFactoryBook) [
+    minimal
+    set [
+        title = &quot;Another title&quot;
+    ]
+]
+
+book.title should be &quot;Another title&quot;</pre>
+</li><li><p id="Getting_instance_of_the_new_entity" class="example notrun"><strong>Getting instance of the new entity</strong></p>
+<p>Alternative, you can grab the new instance of the entity using <code>xobject</code> method and initialize it directly or pass it to some external initialization method.</p>
+<pre class="prettyprint lang-spec linenums">
+val book = xbuild(new XFactoryBook) [
+    minimal
+    xobject.title = &quot;Yet another title&quot;
+]
+
+book.title should be &quot;Yet another title&quot;</pre>
+</li><li><p id="Getting_instance_of_the_a_child_entity_by_type" class="example notrun"><strong>Getting instance of the a child entity by type</strong></p>
+<p>The method <code>xobject(Class&lt;E&gt;)</code> also provides access to the first created child entity of the specified type.</p>
+<pre class="prettyprint lang-spec linenums">
+val receipt = xbuild(new XFactoryReceipt) [
+    minimal
+    xobject(Book).title = &quot;Title 1&quot;
+]
+
+receipt.book.title should be &quot;Title 1&quot;</pre>
+</li></ul>
+							</div>
+						    <div class="tab-pane" id="source">
+						    	<h3>DocUsageSpec.spec</h3>
+						    	<p>
+<pre class="prettyprint lang-spec linenums">
+package org.github.xfactory.docs
+
+import org.github.xfactory.testset1.Book
+import org.github.xfactory.testset1.XFactoryBook
+import org.github.xfactory.testset1.XFactoryReceipt
+import org.github.xfactory.tools.PersistenceTestRule
+import org.github.xfactory.tools.TestSet
+import org.junit.Rule
+
+/**
+ * Here you will learn how to use XFactory to
+ * create POJOs and persist entities.&lt;br/&gt;
+ * &lt;br/&gt;
+ * *Note:* Prior to use XFactory you will have to implement one XFactory class
+ * per POJO containing mandatory `minimal` method. You are also advised to create
+ * some business initialization methods, like `XFactoryBook.makeBestSeller()`.
+ */
+describe &quot;Using XFactory to create and persist entities&quot; {
+    @Rule
+    public extension PersistenceTestRule = new PersistenceTestRule(TestSet.TEST_SET1)
+
+    context &quot;Create and persist instances of an entity&quot; {
+        /**
+         * To get a brand new instance of an entity you have
+         * to pass an instance of the corresponding XFactory
+         * to the `xbuild(...)` method. The `minimal` method of the
+         * XFactory will be called.
+         */
+        fact &quot;Create a new instance of an entity&quot; {
+            val book = xbuild(new XFactoryBook)
+
+            book should not be null
+            book.title should not be null // Initialized by XFactoryBook.minimal()
+        }
+
+        /**
+         * Persisting a new entity in the database is as simple as
+         * calling `xpersist(...)` extension method instead of the `xbuild(...)`
+         * method. The XFactory implementation should be done in such a way,
+         * that the created entities satisfy all database constraints.
+         */
+        fact &quot;Persist a new instance of an entity&quot; {
+            val book = xpersist(new XFactoryBook)
+
+            book should not be null
+            book.id should not be null
+        }
+
+        /**
+         * In order to satisfy database or some business constraints
+         * child entities can be created in the background.
+         */
+        fact &quot;Child entities get created automatically&quot; {
+            val receipt = xpersist(new XFactoryReceipt)
+
+            receipt.book.id should not be null
+            receipt.customer.id should not be null
+        }
+
+    }
+
+    /**
+     * Passing a closure as a second argument to the `xbuild` or `xpersist`
+     * method allows you to modify entity instantiation in many ways.
+     */
+    context &quot;Take control of the entity instantiation&quot; {
+
+        /**
+         * Passing a closure as a second argument to the `xbuild` or `xpersist`
+         * method allows customization of the initialization procedure.
+         */
+        fact &quot;Missing call to minimal leaves uninitialized entity&quot; {
+            val book = xbuild(new XFactoryBook) []
+
+            book.title should be null
+        }
+
+        /**
+         * Passing a closure as a second argument to the `xbuild` or `xpersist`
+         * method allows customization of the initialization procedure.
+         */
+        fact &quot;Calling minimal method manually initialize the entity in the standard way&quot; {
+            val book = xbuild(new XFactoryBook) [
+                minimal
+            ]
+            
+            // Same as &quot;val book = xbuild(new XFactoryBook)&quot;
+
+            book.title should not be null
+        }
+
+        /**
+         * The `set [...]` provides direct access to the attribute of the entity.
+         * The call to the `minimal` method ensures, that all other initialization
+         * are done.
+         */
+        fact &quot;Changing entity attribute&quot; {
+            val book = xbuild(new XFactoryBook) [
+                minimal
+                set [
+                    title = &quot;Another title&quot;
+                ]
+            ]
+
+            book.title should be &quot;Another title&quot;
+        }
+
+        /**
+         * Alternative, you can grab the new instance of the entity
+         * using `xobject` method and initialize it directly or pass it
+         * to some external initialization method.
+         */
+         fact &quot;Getting instance of the new entity&quot; {
+            val book = xbuild(new XFactoryBook) [
+                minimal
+                xobject.title = &quot;Yet another title&quot;
+            ]
+
+            book.title should be &quot;Yet another title&quot;
+         }
+
+        /**
+         * The method `xobject(Class&lt;E&gt;)` also provides access to the first
+         * created child entity of the specified type.
+         */
+         fact &quot;Getting instance of the a child entity by type&quot; {
+            val receipt = xbuild(new XFactoryReceipt) [
+                minimal
+                xobject(Book).title = &quot;Title 1&quot;
+            ]
+
+            receipt.book.title should be &quot;Title 1&quot;
+         }
+    }
+}
+</pre>
+						    </p></div>
+						  </div>
+					</div> 
+				</div> <!-- /row -->
+			</div> <!-- /content -->
+		</div> <!-- /tabbable -->
+		<footer>
+			<p><small>Generated by <a href="http://www.jnario.org">Jnario</a>.</small></p>
+		</footer>
+	</div> <!-- /container -->
+
+</body>
+</html>

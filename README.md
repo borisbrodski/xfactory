@@ -7,6 +7,10 @@ An Embedded DSL (EDSL) into Xtend to build POJOs and persist entities.
 
 ## Documentation
 
+* Version 0.0.2
+  * [XFactory Documentation](http://borisbrodski.github.io/xfactory/doc-0.0.2/org/github/xfactory/docs/XFactoryDocumentationV002Suite.html)
+  * [JavaDoc](http://borisbrodski.github.io/xfactory/doc\-0.0.2/javadoc/index.html)
+
 * Version 0.0.1
   * [XFactory Documentation](http://borisbrodski.github.io/xfactory/doc-0.0.1/org/github/xfactory/docs/XFactoryDocumentationV001Suite.html)
 
