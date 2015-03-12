@@ -16,7 +16,7 @@ describe "Setup XFactory" {
     @Rule
     public extension PersistenceTestRule = new PersistenceTestRule(TestSet.TEST_SET1)
 
-	public InfrastructureProvider x // TODO Prevent unused import warning. Remove later.
+    public InfrastructureProvider x // TODO Prevent unused import warning. Remove later.
 
     /*
      * To use XFactory in your tests you have call <i>XFactory.initTest()</i> method before each test.
@@ -38,10 +38,10 @@ describe "Setup XFactory" {
      * operations. (no persistence)
      */
     fact "XFactory without persistence" {
-    	XFactory.initTest(null)
+        XFactory.initTest(null)
 
-    	xbuild(new XFactoryCustomer)  // OK
-    	xpersist(new XFactoryCustomer) throws XFactoryException
+        xbuild(new XFactoryCustomer)  // OK
+        xpersist(new XFactoryCustomer) throws XFactoryException
     }
 
     /*
@@ -49,51 +49,51 @@ describe "Setup XFactory" {
      * of the InfrastructureProvider interface should be provided using <i>XFactory.initTest()</i> method.
      */
     fact "XFactory with persistence" {
-    	// Initialize and enable persistence
-    	XFactory.initTest(new InfrastructureProvider() {
-			override persist(Object xobject) {
-				// persist an object
-			}
+        // Initialize and enable persistence
+        XFactory.initTest(new InfrastructureProvider() {
+            override persist(Object xobject) {
+                // persist an object
+            }
 
-			override postPersist(Object xobject) {
-			}
+            override postPersist(Object xobject) {
+            }
 
-			override prePersist(Object xobject) {
-			}
-    	})
+            override prePersist(Object xobject) {
+            }
+        })
 
-    	xbuild(new XFactoryCustomer)  // OK
-    	xpersist(new XFactoryCustomer) // OK
+        xbuild(new XFactoryCustomer)  // OK
+        xpersist(new XFactoryCustomer) // OK
     }
 
     /*
      * Here is an example implementation of the <i>InfrastructureProvider</i> using hibernate
      */
     fact "XFactory with hibernate" {
-    	// Initialize and enable persistence
-		val entityManager = getEntityManager
+        // Initialize and enable persistence
+        val entityManager = getEntityManager
 
-    	XFactory.initTest(new InfrastructureProvider() {
-			override persist(Object xobject) {
-				if (!entityManager.contains(xobject)) {
-					entityManager.persist(xobject)
-				}
-			}
+        XFactory.initTest(new InfrastructureProvider() {
+            override persist(Object xobject) {
+                if (!entityManager.contains(xobject)) {
+                    entityManager.persist(xobject)
+                }
+            }
 
-			override postPersist(Object xobject) {
-				entityManager.flush
-			}
+            override postPersist(Object xobject) {
+                entityManager.flush
+            }
 
-			override prePersist(Object xobject) {
-			}
-    	})
+            override prePersist(Object xobject) {
+            }
+        })
 
-    	val customer = xpersist(new XFactoryCustomer)
+        val customer = xpersist(new XFactoryCustomer)
 
-    	entityManager.clear
+        entityManager.clear
 
-    	entityManager.find(Customer, customer.id) => [
-    		name => customer.name
-    	]
+        entityManager.find(Customer, customer.id) => [
+            name => customer.name
+        ]
     }
 }

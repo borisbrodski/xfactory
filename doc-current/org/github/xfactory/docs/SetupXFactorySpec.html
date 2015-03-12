@@ -59,15 +59,15 @@ xpersist(new XFactoryCustomer) throws XFactoryException</pre>
 <pre class="prettyprint lang-spec linenums">
 // Initialize and enable persistence
 XFactory.initTest(new InfrastructureProvider() {
-      override persist(Object xobject) {
+    override persist(Object xobject) {
         // persist an object
-      }
+    }
 
-      override postPersist(Object xobject) {
-      }
+    override postPersist(Object xobject) {
+    }
 
-      override prePersist(Object xobject) {
-      }
+    override prePersist(Object xobject) {
+    }
 })
 
 xbuild(new XFactoryCustomer)  // OK
@@ -76,21 +76,21 @@ xpersist(new XFactoryCustomer) // OK</pre>
 <p>Here is an example implementation of the <i>InfrastructureProvider</i> using hibernate</p>
 <pre class="prettyprint lang-spec linenums">
 // Initialize and enable persistence
-    val entityManager = getEntityManager
+val entityManager = getEntityManager
 
 XFactory.initTest(new InfrastructureProvider() {
-      override persist(Object xobject) {
+    override persist(Object xobject) {
         if (!entityManager.contains(xobject)) {
-          entityManager.persist(xobject)
+            entityManager.persist(xobject)
         }
-      }
+    }
 
-      override postPersist(Object xobject) {
+    override postPersist(Object xobject) {
         entityManager.flush
-      }
+    }
 
-      override prePersist(Object xobject) {
-      }
+    override prePersist(Object xobject) {
+    }
 })
 
 val customer = xpersist(new XFactoryCustomer)
@@ -98,7 +98,7 @@ val customer = xpersist(new XFactoryCustomer)
 entityManager.clear
 
 entityManager.find(Customer, customer.id) =&gt; [
-  name =&gt; customer.name
+    name =&gt; customer.name
 ]</pre>
 </li></ul>
 							</div>
@@ -124,7 +124,7 @@ describe &quot;Setup XFactory&quot; {
     @Rule
     public extension PersistenceTestRule = new PersistenceTestRule(TestSet.TEST_SET1)
 
-  public InfrastructureProvider x // TODO Prevent unused import warning. Remove later.
+    public InfrastructureProvider x // TODO Prevent unused import warning. Remove later.
 
     /*
      * To use XFactory in your tests you have call &lt;i&gt;XFactory.initTest()&lt;/i&gt; method before each test.
@@ -146,10 +146,10 @@ describe &quot;Setup XFactory&quot; {
      * operations. (no persistence)
      */
     fact &quot;XFactory without persistence&quot; {
-      XFactory.initTest(null)
+        XFactory.initTest(null)
 
-      xbuild(new XFactoryCustomer)  // OK
-      xpersist(new XFactoryCustomer) throws XFactoryException
+        xbuild(new XFactoryCustomer)  // OK
+        xpersist(new XFactoryCustomer) throws XFactoryException
     }
 
     /*
@@ -157,52 +157,52 @@ describe &quot;Setup XFactory&quot; {
      * of the InfrastructureProvider interface should be provided using &lt;i&gt;XFactory.initTest()&lt;/i&gt; method.
      */
     fact &quot;XFactory with persistence&quot; {
-      // Initialize and enable persistence
-      XFactory.initTest(new InfrastructureProvider() {
-      override persist(Object xobject) {
-        // persist an object
-      }
+        // Initialize and enable persistence
+        XFactory.initTest(new InfrastructureProvider() {
+            override persist(Object xobject) {
+                // persist an object
+            }
 
-      override postPersist(Object xobject) {
-      }
+            override postPersist(Object xobject) {
+            }
 
-      override prePersist(Object xobject) {
-      }
-      })
+            override prePersist(Object xobject) {
+            }
+        })
 
-      xbuild(new XFactoryCustomer)  // OK
-      xpersist(new XFactoryCustomer) // OK
+        xbuild(new XFactoryCustomer)  // OK
+        xpersist(new XFactoryCustomer) // OK
     }
 
     /*
      * Here is an example implementation of the &lt;i&gt;InfrastructureProvider&lt;/i&gt; using hibernate
      */
     fact &quot;XFactory with hibernate&quot; {
-      // Initialize and enable persistence
-    val entityManager = getEntityManager
+        // Initialize and enable persistence
+        val entityManager = getEntityManager
 
-      XFactory.initTest(new InfrastructureProvider() {
-      override persist(Object xobject) {
-        if (!entityManager.contains(xobject)) {
-          entityManager.persist(xobject)
-        }
-      }
+        XFactory.initTest(new InfrastructureProvider() {
+            override persist(Object xobject) {
+                if (!entityManager.contains(xobject)) {
+                    entityManager.persist(xobject)
+                }
+            }
 
-      override postPersist(Object xobject) {
-        entityManager.flush
-      }
+            override postPersist(Object xobject) {
+                entityManager.flush
+            }
 
-      override prePersist(Object xobject) {
-      }
-      })
+            override prePersist(Object xobject) {
+            }
+        })
 
-      val customer = xpersist(new XFactoryCustomer)
+        val customer = xpersist(new XFactoryCustomer)
 
-      entityManager.clear
+        entityManager.clear
 
-      entityManager.find(Customer, customer.id) =&gt; [
-        name =&gt; customer.name
-      ]
+        entityManager.find(Customer, customer.id) =&gt; [
+            name =&gt; customer.name
+        ]
     }
 }
 </pre>

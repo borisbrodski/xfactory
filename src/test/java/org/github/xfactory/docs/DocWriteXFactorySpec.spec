@@ -44,7 +44,7 @@ describe "Writing XFactories" {
      * </pre>
      *
      * We extend `AbstractXFactory` class passing the entity class as a generic parameter.
-     * Then we have to implement `minimal` method setting all mandatory fields to some values.
+     * Then we implement the `minimal` method setting all mandatory fields to some values.
      * Now we can use this XFactory to create and persist simple instances:
      */
     fact "Simple XFactory" {
@@ -86,10 +86,10 @@ describe "Writing XFactories" {
      * <i><pre>
      *   Build a valid and verified customer
      * </pre></i>
-     * So we can specify our requirements on the object we build without
-     * explicitly writing the implementation details of this requirements.
+     * Here we specify our requirements on the object we build without
+     * explicitly writing the implementation details.
      * If in the future the logic of making a verified customers changes, we will have
-     * to just fix the method: `XFactoryCustomer.makeVerified()` and all the tests
+     * to just fix the method `XFactoryCustomer.makeVerified()` and all our tests
      * will be using the new logic automatically.
      */
     fact "XFactory with domain methods" {
