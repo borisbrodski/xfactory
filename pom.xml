@@ -45,7 +45,9 @@
 		<jnario.version>1.0.0</jnario.version>
 		<hibernate.version>3.6.10.Final</hibernate.version>
 	</properties>
-
+    <prerequisites>
+        <maven>2.2.1</maven>
+    </prerequisites>
 	<dependencies>
 		<dependency>
 			<groupId>org.hibernate.javax.persistence</groupId>
@@ -107,7 +109,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
+				<version>3.2</version>
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
@@ -152,7 +154,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.12.4</version>
+				<version>2.18.1</version>
 				<configuration>
 					<includes>
 						<include>**/XFactoryDocumentation*Suite.java</include>
@@ -184,7 +186,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>2.3</version>
+				<version>2.4</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -197,7 +199,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
-				<version>1.5</version>
+				<version>1.6</version>
 				<executions>
 					<execution>
 						<id>sign-artifacts</id>
@@ -211,7 +213,7 @@
 			<plugin>
 			    <groupId>org.apache.maven.plugins</groupId>
 			    <artifactId>maven-javadoc-plugin</artifactId>
-			    <version>2.9.1</version>
+			    <version>2.10.1</version>
 			    <configuration>
 			        <aggregate>true</aggregate>
 			        <show>public</show>
