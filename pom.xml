@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.borisbrodski</groupId>
 	<artifactId>xfactory</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.2</version>
 	<name>XFactory</name>
 
 	<description>
@@ -37,7 +37,8 @@
 		<connection>scm:git:git@github.com:borisbrodski/xfactory.git</connection>
 		<url>scm:git:git@github.com:borisbrodski/xfactory.git</url>
 		<developerConnection>scm:git:git@github.com:borisbrodski/xfactory.git</developerConnection>
-	</scm>
+	  <tag>v0.0.2</tag>
+  </scm>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
