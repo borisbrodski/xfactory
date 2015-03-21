@@ -21,14 +21,19 @@ An Embedded DSL (EDSL) into Xtend to build POJOs and persist entities.
 <dependency>
 	<groupId>com.github.borisbrodski</groupId>
 	<artifactId>xfactory</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 </dependency>
 ```
 
 * Direct download
-  * [xfactory-0.0.1.jar](http://central.maven.org/maven2/com/github/borisbrodski/xfactory/0.0.1/xfactory-0.0.1.jar)
-  * [xfactory-0.0.1-javadoc.jar](http://central.maven.org/maven2/com/github/borisbrodski/xfactory/0.0.1/xfactory-0.0.1-javadoc.jar)
-  * [xfactory-0.0.1-sources.jar](http://central.maven.org/maven2/com/github/borisbrodski/xfactory/0.0.1/xfactory-0.0.1-sources.jar)
+  * Version 0.0.2
+    * [xfactory-0.0.2.jar](http://central.maven.org/maven2/com/github/borisbrodski/xfactory/0.0.2/xfactory-0.0.2.jar)
+    * [xfactory-0.0.2-javadoc.jar](http://central.maven.org/maven2/com/github/borisbrodski/xfactory/0.0.2/xfactory-0.0.2-javadoc.jar)
+    * [xfactory-0.0.2-sources.jar](http://central.maven.org/maven2/com/github/borisbrodski/xfactory/0.0.2/xfactory-0.0.2-sources.jar)
+  * Version 0.0.1
+    * [xfactory-0.0.1.jar](http://central.maven.org/maven2/com/github/borisbrodski/xfactory/0.0.1/xfactory-0.0.1.jar)
+    * [xfactory-0.0.1-javadoc.jar](http://central.maven.org/maven2/com/github/borisbrodski/xfactory/0.0.1/xfactory-0.0.1-javadoc.jar)
+    * [xfactory-0.0.1-sources.jar](http://central.maven.org/maven2/com/github/borisbrodski/xfactory/0.0.1/xfactory-0.0.1-sources.jar)
 
 ## Integration into your test environment
 
